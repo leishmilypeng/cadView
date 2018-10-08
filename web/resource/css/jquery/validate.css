@@ -1,0 +1,46 @@
+input.error {
+	border: 1.5px solid #FF0000; 
+	padding: 0px;
+	background:rgb(255, 255, 147);
+	padding: 0 5px;
+}	
+select.error {
+	border: 1.5px solid #FF0000;
+	/*  background:#FFF;*/
+	padding: 0px;
+}
+label.error {
+	margin-left:2px;
+    padding-left: 14px;
+	color: #FF0000;
+	background: url(gantanhao.png) no-repeat left center;
+	/*background-position:20%;*/
+	font-family:"Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+    font-size: 11px;
+    text-align: left;
+     display: inline;
+     left:105px;
+     position:absolute;
+     top:30px;
+     z-index:20;
+     width:auto !important;
+}
+input.valid {
+	border: 1px solid #ccc;	
+}
+select.valid {
+   border: 1px solid #ccc;
+}
+label.valid {
+    color: #00f;
+    padding-left: 12px !important;
+    background: url(checked.png) no-repeat 0px center;
+	font-family:"Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+	/*background-position:20%;*/
+    font-size: 16px;
+	line-height:16px;
+    display: inline;
+    position:relative;
+    top:3px;
+    left:-4px;
+}

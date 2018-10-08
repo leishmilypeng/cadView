@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF" monitorInterval="1800">
+	<appenders>
+		
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+			<!-- 
+			<PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss} %c-%p %m%n" />
+			-->
+			<PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss} %m%n" />
+		</Console>
+		
+		<RollingFile name="ROLLING" fileName="/opt/logs/cad.log"
+             filePattern="/opt/logs/cad.%d{yyyy-MM-dd}_%i.log">
+            <PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss} %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="512 MB"/>
+            </Policies>
+            <!-- 最大保留压缩日志文件个数 -->
+            <DefaultRolloverStrategy max="200"/>
+            
+        </RollingFile>
+	</appenders>
+	<loggers>
+		<Logger name="org.hibernate.cfg" level="info"></Logger>
+        <Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"></Logger>
+        <!--
+        <Logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE"></Logger>
+        -->
+        <Logger name="org.hibernate.hql.internal.ast.HqlSqlWalker" level="ERROR"></Logger>
+        <Logger name="org.hibernate.SQL" level="TRACE"></Logger>
+        <Logger name="org.hibernate.engine.QueryParameters" level="TRACE"></Logger>
+        <Logger name="org.hibernate.engine.query.HQLQueryPlan" level="TRACE"></Logger>
+        <Logger name="org.springframework" level="info"></Logger>
+        <Logger name="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" level="DEBUG"></Logger>
+        <Logger name="org.springframework.web.servlet.view.JstlView" level="DEBUG"></Logger>
+		<root level="info">
+			<!-- 控制日志输出到控制台 -->
+			<appender-ref ref="CONSOLE" />
+			<!-- 控制日志输出到文件--> 
+			<appender-ref ref="ROLLING"/>
+			
+		</root>
+	</loggers>
+</configuration>
