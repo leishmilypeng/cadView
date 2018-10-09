@@ -47,6 +47,7 @@
         window.location.href="${_ctx}/toSearchPage.do";
     });
 
+    window.location.href="${_ctx}/toSearchPage.do";
 
 
     var demoMsg = {

@@ -437,12 +437,13 @@ public final class FileUtility {
 		// 创建新文件
 		File source = new File(sourcePath);
 		File dest =  new File(targetDir+newName);
-		if(dest.exists()&& !Boolean.valueOf(isReplace)){
+		if(dest.exists()&& !Boolean.valueOf(isReplace)&&dest.length()>0){
 				return true;
 		}else{
 			InputStream input=null;
 			OutputStream output = null;
 			try{
+
 				input = new FileInputStream(source);
 				output =new FileOutputStream(dest);
 				byte[] buf = new byte[1024];
@@ -457,5 +458,6 @@ public final class FileUtility {
 		}
 		return true;
 	}
-    
+
+
 }

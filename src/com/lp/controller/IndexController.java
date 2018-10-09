@@ -6,6 +6,7 @@ import com.lp.utils.Config;
 import com.lp.utils.Constants;
 import com.lp.utils.FileUtility;
 import com.lp.utils.MD5;
+import com.lp.utils.ZipUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -87,7 +90,6 @@ public class IndexController {
     @ResponseBody
     public String showCad(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String fileName = "";
-        //从数据库中获取流程图的二进制数据
         String id = request.getParameter("key");
         CadInfo cadInfo = Constants.fileListMap.get(id);
         String realPath =  request.getRealPath("/");
@@ -176,6 +178,80 @@ public class IndexController {
         return cadInfo;
     }
 
+
+    @RequestMapping("/doPackage")
+    @ResponseBody
+    public String doPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        File test = new File("E:/deploy/cad/resource/zip/a797687c596169adb569e6700c42f560");
+        String [] strs = test.list();
+
+
+        String mapObjStr = request.getParameter("mapObj");
+        JSONObject jsonObj =  JSONObject.parseObject(mapObjStr);
+        Iterator<String> keys = jsonObj.keySet().iterator();
+        List<String> list = new ArrayList<>();
+        while(keys.hasNext()){
+            list.add(keys.next());
+        }
+        // 按自然顺序排序
+        Collections.sort(list);
+        String zipName =  MD5.stringMD5(JSONObject.toJSONString(list));
+
+        // 生成压缩文件
+        String realPath =  request.getRealPath("/");
+        String zipDir = realPath +"resource"+File.separator+"zip"+File.separator+zipName;
+        File zipDirFile = new File(zipDir+File.separator);
+        if(!zipDirFile.exists()){
+            zipDirFile.mkdirs();
+        }
+
+        File zipFile = new File(zipDir+".zip");
+
+        String zip = zipName+".zip";
+
+        if(zipFile.exists()){
+           return  zip;
+        }else{
+            for(int i=0;i<list.size();i++){
+                String id = list.get(i);
+                CadInfo cadInfo = Constants.fileListMap.get(id);
+                FileUtility.moveFile(cadInfo.getPath(),zipDir+File.separator,cadInfo.getName(),false);
+            }
+            // 压缩
+            FileOutputStream fos1 = new FileOutputStream(zipFile);
+            ZipUtils.toZip(zipDir, fos1,true);
+            //删除文件夹
+            FileUtility.deleteDirectory(zipDir);
+        }
+
+        return zip;
+    }
+
+    @RequestMapping("/download")
+    public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        byte[] buf = new byte[1024];
+        int len;
+        String zipFileName = request.getParameter("zipFileName");
+        String realPath =  request.getRealPath("/");
+        String zipDir = realPath +File.separator+"resource"+File.separator+"zip"+File.separator+zipFileName;
+        File zipFile = new File(zipDir);
+        //下载文件
+        FileInputStream zipInput =new FileInputStream(zipFile);
+        OutputStream out = response.getOutputStream();
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename="+zipFileName);
+        while ((len=zipInput.read(buf))!= -1){
+            out.write(buf,0,len);
+        }
+        zipInput.close();
+        out.flush();
+        out.close();
+
+    }
+
+
     public List getChildList(String rootPath){
         File file = new File(rootPath);
         String [] files = file.list();
@@ -208,6 +284,9 @@ public class IndexController {
         }
         return  root;
     }
+
+
+
 
 
 }

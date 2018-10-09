@@ -93,30 +93,42 @@
 
 </head>
 <body>
+    <div style="margin-bottom: 10px;margin-top: 10px;">
+            <img src="${_ctx}/resource/images/logo.png">
+            <span style="font-style:normal;font-weight:900;font-size: x-large;">武汉三工光电图纸检索系统</span>
+
+    </div>
 
     <div >
         <span>查询图号</span>
         <input type="text" id="searchKeyId">
         <input type="button" value="搜索" id="searchId" onclick="">
-        <input type="button" value="初始化" id="initId" onclick="">
+        <%--<input type="button" value="初始化" id="initId" onclick="">--%>
 
     </div>
 
     <div style="margin-top: 20px;">
-        <div style="width: 25%;float: left;border:1px solid black;">
-            <select name="leftList" id="undo_redo_left" class="form-control" size="13" multiple="multiple" style="overflow:scroll;" >
-            </select>
+        <div style="width: 20%;height:600px;float: left;border:0px solid black;">
+            <select name="leftList" id="undo_redo_left" class="form-control" size="13" multiple="multiple" style="overflow:scroll;height: 95%" ></select>
+
+            共<span id="leftNumId">0</span>条
         </div>
         <div style="width: 55px;float: left;">
             <input type="button" value="添加" id="addId" onclick="">
 
         </div>
-        <div  style="width: 25%;float: left;border:1px solid black;">
-            <select name="rightList" id="undo_redo_right" class="form-control" size="13" multiple="multiple" style="overflow:scroll;"  ></select>
+        <div  style="width: 20%;height:600px;float: left;border:0px solid black;">
+            <select name="rightList" id="undo_redo_right" class="form-control" size="13" multiple="multiple" style="overflow:scroll;height: 95%;"  ></select>
+            共<span id="rightNumId">0</span>条
         </div>
-        <div style="width: 8%;float: left;">
-            <input type="button" value="删除" id="delId" onclick="">
-            <input type="button" value="打包存档" id="packageId" onclick="" style="margin-top: 100px;">
+        <div style="width: 50px;float: left;">
+            <div>
+                <input type="button" value="删除" id="delId" onclick="">
+            </div>
+            <div style="margin-top: 450px;">
+                <input type="button" value="打包存档" id="packageId" onclick="" >
+                <input type="button" value="清除" id="clearId" onclick="" style="margin-top: 10px;">
+            </div>
         </div>
 
        <%-- <div style="width: 100%;height: 100%;float: left;border:1px solid black;">--%>
@@ -139,7 +151,7 @@
         <%--</div>--%>
     </div>
 
-    <div style="padding: 30px;">
+    <div style="padding: 30px;width: 47%;float: left;">
         <%--
         <a href="javascript:ZoomIn()">Zoom In</a> | <a href="javascript:ZoomOut()">Zoom Out</a> | <a href="javascript:ZoomAll()">Zoom All</a>
         | <a href="javascript:ZoomWindow()">Zoom Window</a>| <a href="javascript:Pan()">Pan</a>| <a href="javascript:HideToolbar()">Show/Hide Toolbar</a>
@@ -147,41 +159,29 @@
         |<a href="javascript:Print()">Print</a>
         |<a href="javascript:Background()">Background</a>
     --%>
-        <table border="0">
-            <tr>
-                <td class="ieb">
-                    <object id="DWGViewX" codebase="http://www.autodwg.com/dwgviewx/dwgviewx.cab" height="520"
-                            width="700" classid="clsid:AC53EFE4-94A7-47E6-BBFC-E9B9CF322299">
-                        <param name="_Version" value="65536">
-                        <param name="_ExtentX" value="18521">
-                        <param name="_ExtentY" value="13758">
-                        <param name="_StockProps" value="0">
-                        <param name="DrawingFile" value="http://${header["Host"]}${_ctx}/resource/cad/009.dwg">
-                        <%--<param name="DrawingFile" value="http://localost:8080/cad/resource/images/009.dwg">--%>
-                        <param name="ShowToobar" value="-1">
-                        <param name="ShowLayoutBar" value="1">
+        <div style="display: none;">
+            <p>查看本地CAD文件,仅支持（dwg,dxf,dwf）三种格式:</p>
+            <input type="file" id="drawing" class="file" accept=".dwg, .dxf, .dwf" onchange="loadDWG()" style="width: 400px;" />
+            <button type="button" id="btn" data-toggle="modal" data-target="#myModal" style="display: none"></button>
+        </div>
 
-                    </object>
-                </td>
-                <td valign="top">
-                    <table width="100%" border="0" cellspacing="10" style="margin-left: 10px;">
-                        <tr>
-                            <td width="100%">
-                                <div>
+        <div>
+            <object id="DWGViewX" codebase="http://www.autodwg.com/dwgviewx/dwgviewx.cab" height="520"
+                    width="700" classid="clsid:AC53EFE4-94A7-47E6-BBFC-E9B9CF322299">
+                <param name="_Version" value="65536">
+                <param name="_ExtentX" value="18521">
+                <param name="_ExtentY" value="13758">
+                <param name="_StockProps" value="0">
+                <param name="DrawingFile" value="http://${header["Host"]}${_ctx}/resource/cad/009.dwg">
+                <%--<param name="DrawingFile" value="http://localost:8080/cad/resource/images/009.dwg">--%>
+                <param name="ShowToobar" value="-1">
+                <param name="ShowLayoutBar" value="-1">
 
-                                    <p>查看本地CAD文件,仅支持（dwg,dxf,dwf）三种格式:</p>
-                                    <input type="file" id="drawing" class="file" accept=".dwg, .dxf, .dwf" onchange="loadDWG()" style="width: 400px;" />
+            </object>
 
-                                </div>
-                            </td>
-                        </tr>
 
-                    </table>
-                </td>
-            </tr>
-        </table>
+        </div>
 
-        <button type="button" id="btn" data-toggle="modal" data-target="#myModal" style="display: none"></button>
     </div>
 
     <%--
@@ -239,10 +239,13 @@
                         if(result!=null){
                             var cadObj = result;
                             $("#undo_redo_left").empty();
-                            for(var i=0;i<cadObj.length;i++) {
+                            var length = cadObj.length;
+                            for(var i=0;i<length;i++) {
                                 var obj = cadObj[i];
                                 $("#undo_redo_left").append("<option value='" + obj.id + "' path='"+obj.path+"'  >" + obj.name + "</option>");//新增
                             }
+                            $("#leftNumId").html(length);
+
                         }
                     }
                 });
@@ -286,6 +289,11 @@
             }
 
 
+            var leftLen = $("#undo_redo_left")[0].options.length;
+            var rightLen = $("#undo_redo_right")[0].options.length;
+            $("#leftNumId").html(leftLen);
+            $("#rightNumId").html(rightLen);
+
         });
 
         //删除
@@ -313,7 +321,9 @@
             for (var i = 0; i < rigthLen; i++) {
                 var op = rightOptions[i];
                 var key = op.value;
-                delArr.push(key);
+                if (op.selected) {
+                    delArr.push(key);
+                }
                 if (mapObj[key] == null && op.selected) {
                     var path = $(op).attr("path");
                     leftObj.append("<option value='" + key + "' path='"+path+"' >" + op.text + "</option>");//新增
@@ -326,11 +336,61 @@
                 $("#undo_redo_right option[value='"+delArr[k]+"']").remove();
             }
 
+            var leftLen = $("#undo_redo_left")[0].options.length;
+            var rightLen = $("#undo_redo_right")[0].options.length;
+            $("#leftNumId").html(leftLen);
+            $("#rightNumId").html(rightLen);
+
         });
 
         //打包存档
         $("#packageId").off("click").on("click", function(event){
+            debugger
+            var mapObj = {};
+            var rightObj = $("#undo_redo_right");
+            var rightOptions = rightObj[0].options;
+            var rigthLen = rightOptions.length;
+            for (var j = 0; j < rigthLen; j++) {
+                var rOp = rightOptions[j];
+                mapObj[rOp.value] = rOp.text;
+            }
 
+            if(isEmptyObject(mapObj)){
+                alert("请先选择图纸！");
+                return;
+            }
+
+            $.ajax({
+                "type" : 'post',
+                "url" : '${_ctx}/doPackage.do',
+                "dataType" : "json",
+                "async" : false,
+                "data" : {
+                    "mapObj":JSON.stringify(mapObj)
+                },
+                success : function(result) {
+                    if(result!=null){
+                        debugger
+                        window.location.href="${_ctx}/download.do?zipFileName="+result;
+                    }
+                }
+            });
+
+        });
+
+        // clearId
+        $("#clearId").off("click").on("click", function(event){
+            var leftObj = $("#undo_redo_left");
+            var leftOp = leftObj[0].options;
+            var len = leftOp.length;
+            for(var i=len-1;i>=0;i--){
+                var op = $(leftOp[i]);
+                op.remove();
+            }
+
+            var leftLen = $("#undo_redo_left")[0].options.length;
+            $("#leftNumId").html(leftLen);
+            $("#searchKeyId").val("");
 
         });
 
@@ -417,6 +477,12 @@
     }
 
 
+    function isEmptyObject(obj) {
+        for (var key in obj){
+            return false;//返回false，不为空对象
+        }
+        return true;//返回true，为空对象
+    }
 
 
 </script>
