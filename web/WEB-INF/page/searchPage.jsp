@@ -183,6 +183,9 @@
         </div>
 
     </div>
+    <div style="width: 100%;float: left;">
+        <span style="margin-right: 100px;margin-left: 80%;font-weight: bold;">2018 V1版</span>
+    </div>
 
     <%--
     <div>
