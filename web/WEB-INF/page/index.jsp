@@ -47,6 +47,8 @@
         window.location.href="${_ctx}/toSearchPage.do";
     });
 
+
+
     var demoMsg = {
         async:"正在进行异步加载，请等一会儿再点击...",
         expandAllOver: "全部展开完毕",

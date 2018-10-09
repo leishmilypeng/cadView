@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.lp.entity.CadInfo;
 import com.lp.utils.Config;
 import com.lp.utils.Constants;
+import com.lp.utils.FileUtility;
 import com.lp.utils.MD5;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -81,6 +82,22 @@ public class IndexController {
 
     }
 
+
+    @RequestMapping("/showCad")
+    @ResponseBody
+    public String showCad(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String fileName = "";
+        //从数据库中获取流程图的二进制数据
+        String id = request.getParameter("key");
+        CadInfo cadInfo = Constants.fileListMap.get(id);
+        String realPath =  request.getRealPath("/");
+        String dir = realPath +File.separator+"resource"+File.separator+"cad"+File.separator;
+        String suffix = cadInfo.getName().substring(cadInfo.getName().lastIndexOf("."));
+        fileName = cadInfo.getId()+suffix;
+        FileUtility.moveFile(cadInfo.getPath(),dir,fileName,false);
+        return fileName;
+    }
+
     @RequestMapping("/doSearch")
     @ResponseBody
     public List doSearch(HttpServletRequest request, HttpServletResponse response) {
@@ -95,8 +112,20 @@ public class IndexController {
                 if(Boolean.valueOf(cadInfo.isDir())){
                     continue;
                 }
-                if(cadInfo.getName().toLowerCase().indexOf(keyValue)>-1){
-                    list.add(cadInfo);
+
+                int suffixIdx = cadInfo.getName().lastIndexOf(".");
+                if(suffixIdx<0){
+                    continue;
+                }
+                String suffix = cadInfo.getName().substring(suffixIdx+1);
+                System.out.println("===文件后缀=="+suffix);
+                // dwg,dxf,dwf
+                if("dwg".equals(suffix.toLowerCase())||"dxf".equals(suffix.toLowerCase())||"dwf".equals(suffix.toLowerCase())){
+                    if(cadInfo.getName().toLowerCase().indexOf(keyValue)>-1){
+                        list.add(cadInfo);
+                    }
+                }else{
+                    continue;
                 }
             }
         }

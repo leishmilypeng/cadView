@@ -1,3 +1,5 @@
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.Iterator" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -8,6 +10,34 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:set var="_ctx" value="${pageContext.request.contextPath}"></c:set>
+
+<%
+
+    String SERVER_NAME = request.getServerName();
+    String SERVER_SOFTWARE = request.getServletContext().getServerInfo();
+    String SERVER_PROTOCOL = request.getProtocol();
+    Integer SERVER_PORT = request.getServerPort();
+    String REQUEST_METHOD = request.getMethod();
+    String PATH_INFO = request.getPathInfo();
+    String PATH_TRANSLATED = request.getPathTranslated();
+    String SCRIPT_NAME = request.getServletPath();
+    String DOCUMENT_ROOT = request.getRealPath("/");
+    String QUERY_STRING = request.getQueryString();
+    String REMOTE_HOST = request.getRemoteHost();
+    String REMOTE_ADDR = request.getRemoteAddr();
+    String AUTH_TYPE = request.getAuthType();
+    String REMOTE_USER = request.getRemoteUser();
+    String CONTENT_TYPE = request.getContentType();
+    Integer CONTENT_LENGTH = request.getContentLength();
+    String HTTP_ACCEPT = request.getHeader("Accept");
+    String HTTP_USER_AGENT = request.getHeader("User-Agent");
+    String HTTP_REFERER = request.getHeader("Referer");
+    HashMap infoMap = new HashMap();
+    infoMap.put("SERVER_NAME", SERVER_NAME); infoMap.put("SERVER_SOFTWARE", SERVER_SOFTWARE); infoMap.put("SERVER_PROTOCOL", SERVER_PROTOCOL); infoMap.put("SERVER_PORT", SERVER_PORT);infoMap.put("REQUEST_METHOD", REQUEST_METHOD); infoMap.put("PATH_INFO", PATH_INFO); infoMap.put("PATH_TRANSLATED", PATH_TRANSLATED); infoMap.put("SCRIPT_NAME", SCRIPT_NAME); infoMap.put("DOCUMENT_ROOT", DOCUMENT_ROOT); infoMap.put("QUERY_STRING", QUERY_STRING); infoMap.put("REMOTE_HOST", REMOTE_HOST); infoMap.put("REMOTE_ADDR", REMOTE_ADDR); infoMap.put("AUTH_TYPE", AUTH_TYPE); infoMap.put("REMOTE_USER", REMOTE_USER); infoMap.put("CONTENT_TYPE", CONTENT_TYPE); infoMap.put("CONTENT_LENGTH", CONTENT_LENGTH); infoMap.put("HTTP_ACCEPT", HTTP_ACCEPT); infoMap.put("HTTP_USER_AGENT", HTTP_USER_AGENT); infoMap.put("HTTP_REFERER", HTTP_REFERER); Iterator it = infoMap.keySet().iterator();
+
+
+%>
+
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -68,6 +98,7 @@
         <span>查询图号</span>
         <input type="text" id="searchKeyId">
         <input type="button" value="搜索" id="searchId" onclick="">
+        <input type="button" value="初始化" id="initId" onclick="">
 
     </div>
 
@@ -125,8 +156,8 @@
                         <param name="_ExtentX" value="18521">
                         <param name="_ExtentY" value="13758">
                         <param name="_StockProps" value="0">
-                        <%--<param name="DrawingFile" value="${_ctx}/resource/images/009.dwg">--%>
-                        <param name="DrawingFile" value="http://localost:8080/cad/resource/images/009.dwg">
+                        <param name="DrawingFile" value="http://${header["Host"]}${_ctx}/resource/cad/009.dwg">
+                        <%--<param name="DrawingFile" value="http://localost:8080/cad/resource/images/009.dwg">--%>
                         <param name="ShowToobar" value="-1">
                         <param name="ShowLayoutBar" value="1">
 
@@ -138,7 +169,7 @@
                             <td width="100%">
                                 <div>
 
-                                    <p>Or, you can load a local drawing to view it:</p>
+                                    <p>查看本地CAD文件,仅支持（dwg,dxf,dwf）三种格式:</p>
                                     <input type="file" id="drawing" class="file" accept=".dwg, .dxf, .dwf" onchange="loadDWG()" style="width: 400px;" />
 
                                 </div>
@@ -153,11 +184,43 @@
         <button type="button" id="btn" data-toggle="modal" data-target="#myModal" style="display: none"></button>
     </div>
 
+    <%--
+    <div>
+
+        JSTL方式<br/>${pageContext.request}                  |取得请求对象<br>
+        ${pageContext.session}                  |取得session对象<br>
+        ${pageContext.request.queryString}      |取得请求的参数字符串<br>
+        ${pageContext.request.requestURL}       |取得请求的URL，但不包括请求之参数字符串<br>
+        ${pageContext.request.contextPath}      |服务的web application的名称<br>
+        ${pageContext.request.method}           |取得HTTP的方法(GET、POST)<br>
+        ${pageContext.request.protocol}         |取得使用的协议(HTTP/1.1、HTTP/1.0)<br>
+        ${pageContext.request.remoteUser}       |取得用户名称<br>
+        ${pageContext.session.id}               |取得session的ID<br>
+        ${header["User-Agent"]}|用户浏览器的版本<br/>
+        ${header["Host"]}|IP<br/>
+        ${pageContext.request.remoteAddr }      |取得用户的IP地址<br>
+        ${pageContext.servletContext.serverInfo}|取得主机端的服务信息<br>
+        ${pageContext.request.serverPort}|端口信息<br>
+        ${pageContext.request.serverName}|服务器名称<br>
+        ${pageContext.request.remoteHost}|客户机名称<br>
+
+
+
+    </div>
+--%>
 
 </body>
 </html>
 <script  type="text/javascript">
+
+    var DWGViewX = document.getElementById("DWGViewX");
+
     $(function() {
+
+        $("#initId").click(function(){
+            window.location.href="${_ctx}/index.do";
+        });
+
         //查询
         $("#searchId").off("click").on("click", function(event){
             var keyValue = $("#searchKeyId").val();
@@ -250,10 +313,11 @@
             for (var i = 0; i < rigthLen; i++) {
                 var op = rightOptions[i];
                 var key = op.value;
+                delArr.push(key);
                 if (mapObj[key] == null && op.selected) {
                     var path = $(op).attr("path");
                     leftObj.append("<option value='" + key + "' path='"+path+"' >" + op.text + "</option>");//新增
-                    delArr.push(key);
+
                 }
             }
 
@@ -283,8 +347,26 @@
                     //path.replace(file,"file");
                     //$("#showImgId").attr("src",'${_ctx}/showImg.do?id='+key);
                     //$("#showImgId").attr("title",name);
-                    $("#DWGViewX param[name='DrawingFile']").val('${_ctx}/showImg.do?id='+key)
+                    //$("#DWGViewX param[name='DrawingFile']").val('${_ctx}/showImg.do?id='+key)
                     // 通过文件流Base64方式展示
+
+                    $.ajax({
+                        "type" : 'post',
+                        "url" : '${_ctx}/showCad.do',
+                        "dataType" : "json",
+                        "async" : false,
+                        "data" : {
+                            "key":key
+                        },
+                        success : function(result) {
+                            if(result!=null){
+                                var cadFile = "http://${header['Host']}${_ctx}/resource/cad/"+result;
+                                //$("#DWGViewX param[name='DrawingFile']").val(cadFile)
+                                DWGViewX.SetDwgFile(cadFile);
+                            }
+                        }
+                    });
+
 
                 }
             }
@@ -326,10 +408,11 @@
                 }
             });
 
-    var DWGViewX = document.getElementById("DWGViewX");
+
     function loadDWG() {
         var dwg = $("#drawing").val();
-        debugger
+        //debugger
+        //dwg = "http://localost:8080/cad/resource/images/008.dwg";
         DWGViewX.SetDwgFile(dwg);
     }
 
