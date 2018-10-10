@@ -1,10 +1,6 @@
 package com.lp.utils;
 
 import net.sf.json.JSONObject;
-import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 
@@ -645,36 +641,6 @@ public class Utility {
         return value;
    }
 	
-	/**
-	 * 获取中文首字母大写
-	 * @param ownerName
-	 * @return
-	 */
-	public static String getOwnerSpell(String ownerName) {
-		String _ownerName = new String();
-		
-		Pattern pattern = Pattern.compile("\\D+");  
-	    Matcher matcher = pattern.matcher(ownerName);
-	    while (matcher.find()) {  
-	    	_ownerName = _ownerName+ matcher.group(0);  
-	    }  
-		
-		HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
-		format.setCaseType(HanyuPinyinCaseType.UPPERCASE);
-		StringBuffer ownerSpell = new StringBuffer(); 
-		try {
-			char[] nameChar = _ownerName.toCharArray();
-			for(char single:nameChar){
-				String[] tmp = PinyinHelper.toHanyuPinyinStringArray(single, format);
-				if(!Utility.isEmpty(tmp))
-					ownerSpell.append(tmp[0].charAt(0));
-			}
-		} catch (BadHanyuPinyinOutputFormatCombination e) {
-			e.printStackTrace();
-		}
-		return ownerSpell.toString();
-	}
-
    public static boolean isMobile(HttpServletRequest request){
 	   boolean result = false;
 	   String userAgent = request.getHeader("User-Agent");
