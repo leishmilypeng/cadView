@@ -166,7 +166,8 @@
         </div>
 
         <div>
-            <object id="DWGViewX" codebase="http://www.autodwg.com/dwgviewx/dwgviewx.cab" height="520"
+            <%--<object id="DWGViewX" codebase="http://www.autodwg.com/dwgviewx/dwgviewx.cab" height="520"--%>
+            <object id="DWGViewX" codebase="http://${header["Host"]}${_ctx}/resource/dwgviewx.cab" height="520"
                     width="700" classid="clsid:AC53EFE4-94A7-47E6-BBFC-E9B9CF322299">
                 <param name="_Version" value="65536">
                 <param name="_ExtentX" value="18521">
@@ -348,7 +349,6 @@
 
         //打包存档
         $("#packageId").off("click").on("click", function(event){
-            debugger
             var mapObj = {};
             var rightObj = $("#undo_redo_right");
             var rightOptions = rightObj[0].options;
@@ -391,8 +391,19 @@
                 op.remove();
             }
 
+            var rightObj = $("#undo_redo_right");
+            var rightOp = rightObj[0].options;
+            var len2 = rightOp.length;
+            for(var i=len2-1;i>=0;i--){
+                var op = $(rightOp[i]);
+                op.remove();
+            }
+
             var leftLen = $("#undo_redo_left")[0].options.length;
+            var rightLen = $("#undo_redo_right")[0].options.length;
             $("#leftNumId").html(leftLen);
+            $("#rightNumId").html(rightLen);
+
             $("#searchKeyId").val("");
 
         });
