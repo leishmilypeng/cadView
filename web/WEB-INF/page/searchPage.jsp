@@ -108,7 +108,7 @@
     </div>
 
     <div style="margin-top: 20px;">
-        <div style="width: 20%;height:600px;float: left;border:0px solid black;">
+        <div style="width: 15%;height:800px;float: left;border:0px solid black;">
             <select name="leftList" id="undo_redo_left" class="form-control" size="13" multiple="multiple" style="overflow:scroll;height: 95%" ></select>
 
             共<span id="leftNumId">0</span>条
@@ -117,7 +117,7 @@
             <input type="button" value="添加" id="addId" onclick="">
 
         </div>
-        <div  style="width: 20%;height:600px;float: left;border:0px solid black;">
+        <div  style="width: 15%;height:800px;float: left;border:0px solid black;">
             <select name="rightList" id="undo_redo_right" class="form-control" size="13" multiple="multiple" style="overflow:scroll;height: 95%;"  ></select>
             共<span id="rightNumId">0</span>条
         </div>
@@ -151,7 +151,7 @@
         <%--</div>--%>
     </div>
 
-    <div style="padding: 30px;width: 47%;float: left;">
+    <div style="padding-left: 30px;width: 60%;float: left;">
         <%--
         <a href="javascript:ZoomIn()">Zoom In</a> | <a href="javascript:ZoomOut()">Zoom Out</a> | <a href="javascript:ZoomAll()">Zoom All</a>
         | <a href="javascript:ZoomWindow()">Zoom Window</a>| <a href="javascript:Pan()">Pan</a>| <a href="javascript:HideToolbar()">Show/Hide Toolbar</a>
@@ -166,9 +166,9 @@
         </div>
 
         <div>
-            <%--<object id="DWGViewX" codebase="http://www.autodwg.com/dwgviewx/dwgviewx.cab" height="520"--%>
-            <object id="DWGViewX" codebase="http://${header["Host"]}${_ctx}/resource/dwgviewx.cab" height="520"
-                    width="700" classid="clsid:AC53EFE4-94A7-47E6-BBFC-E9B9CF322299">
+            <object id="DWGViewX" codebase="http://www.autodwg.com/dwgviewx/dwgviewx.cab" height="750"
+            <%--<object id="DWGViewX" codebase="http://${header["Host"]}${_ctx}/resource/dwgviewx.cab" height="520"--%>
+                    width="1000" classid="clsid:AC53EFE4-94A7-47E6-BBFC-E9B9CF322299">
                 <param name="_Version" value="65536">
                 <param name="_ExtentX" value="18521">
                 <param name="_ExtentY" value="13758">
@@ -256,6 +256,17 @@
             }
         });
 
+        // enter搜索  searchId
+        $("#searchKeyId").off("keydown").on("keydown", function(event) {
+            if (event.keyCode == 13) {
+                $("#searchId").click();
+            }
+        });
+
+        //左边双击添加
+        $("#undo_redo_left").off("dblclick").on("dblclick", function(event){
+            $("#addId").click();
+        });
 
         //添加
         $("#addId").off("click").on("click", function(event) {
