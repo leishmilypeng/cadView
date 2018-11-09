@@ -28,6 +28,6 @@
 	<context:annotation-config/>
 	
 	<bean id="springContextHolder" class="com.lp.utils.SpringContextHolder" lazy-init="false"></bean>
-	
+
 
 </beans>

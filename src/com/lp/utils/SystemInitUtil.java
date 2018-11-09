@@ -12,9 +12,17 @@ public class SystemInitUtil {
 	static final Log LOG = LogFactory.getLog(SystemInitUtil.class);
 	
 	public void init(){
+
+		if(!Constants.fileListMap.isEmpty()){
+			LOG.info("====定时任务启动清空map===");
+			Constants.fileListMap.clear();
+		}
+
 		LOG.info("====开始检索文件===");
 		Timestamp begin = DateUtil.getCurrentTimestamp();
-		String rootPath = Config.getString("default.path");
+		//String rootPath = Config.getString("default.path");
+		Constants.DEFAULT_PATH = FileUtility.getClassPathResource("default.path");
+		String rootPath = Constants.DEFAULT_PATH;
 		this.addFile(rootPath);
 		Timestamp end = DateUtil.getCurrentTimestamp();
 		long last = (end.getTime()-begin.getTime())/1000;

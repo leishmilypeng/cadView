@@ -45,8 +45,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title id ="loginTitle">CAD查看</title>
-    <link rel="icon"  href="${_ctx}/resource/images/public/favicon_02.gif" type="image/x-icon"></link>
+    <title id ="loginTitle">CAD图纸替换和删除</title>
+    <link rel="icon"  href="${_ctx}/resource/images/public/favicon_02.gif" type="image/x-icon">
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/v.js"></script>
@@ -59,6 +59,14 @@
     <link href="${_ctx}/resource/css/jquery/jquery-ui.css" rel="stylesheet">
     <link href="${_ctx}/resource/css/jquery/verify.css" rel="stylesheet">
 
+    <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/ajaxfileupload.js"></script>
+    <%--
+    <link href="${_ctx}/resource/js/lib/jquery/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet">
+    <script src="${_ctx}/resource/js/lib/jquery/jquery-file-upload/js/jquery.fileupload.js" type ="text/javascript"></script>
+    <script src="${_ctx}/resource/js/lib/jquery/jquery-file-upload/js/jquery.fileupload-process.js" type ="text/javascript"></script>
+    <script src="${_ctx}/resource/js/lib/jquery/jquery-file-upload/js/jquery.fileupload-image.js" type ="text/javascript"></script>
+    <script src="${_ctx}/resource/js/lib/jquery/jquery-file-upload/js/jquery.fileupload-validate.js" type ="text/javascript"></script>
+--%>
 
     <script>
         function ZoomIn() {
@@ -93,13 +101,12 @@
 
 </head>
 <body>
-    <%--头部logo--%>
     <div style="margin-bottom: 10px;margin-top: 10px;">
-        <%--
-            <img src="${_ctx}/resource/images/logo.png">
-            <span style="font-style:normal;font-weight:900;font-size: x-large;">武汉三工光电图纸检索系统</span>
-        --%>
-        <jsp:include page="header.jsp"/>
+    <%--
+    <img src="${_ctx}/resource/images/logo.png">
+    <span style="font-style:normal;font-weight:900;font-size: x-large;">武汉三工光电图纸检索系统</span>
+--%>
+    <jsp:include page="header.jsp"/>
     </div>
 
     <div>
@@ -108,13 +115,11 @@
             <jsp:include page="menu.jsp"/>
         </div>
 
-        <%--右侧区域-查询展示--%>
-        <div style="float: left;">
+        <div>
             <div >
                 <span>查询图号</span>
                 <input type="text" id="searchKeyId">
                 <input type="button" value="搜索" id="searchId" onclick="">
-                <%--<input type="button" value="初始化" id="initId" onclick="">--%>
 
             </div>
 
@@ -124,63 +129,20 @@
 
                     共<span id="leftNumId">0</span>条
                 </div>
-                <div style="width: 55px;float: left;">
-                    <input type="button" value="添加" id="addId" onclick="">
-
-                </div>
-                <div  style="width: 15%;height:800px;float: left;border:0px solid black;">
-                    <select name="rightList" id="undo_redo_right" class="form-control" size="13" multiple="multiple" style="overflow:scroll;height: 95%;"  ></select>
-                    共<span id="rightNumId">0</span>条
-                </div>
                 <div style="width: 50px;float: left;">
-                    <div>
-                        <input type="button" value="删除" id="delId" onclick="">
-                    </div>
                     <div style="margin-top: 450px;">
-                        <input type="button" value="打包存档" id="packageId" onclick="" >
                         <input type="button" value="清除" id="clearId" onclick="" style="margin-top: 10px;">
                     </div>
                 </div>
 
-               <%-- <div style="width: 100%;height: 100%;float: left;border:1px solid black;">--%>
-                    <%--<img style="width: 100%;height: 100%;" src="" name="图片展示" title="" id="showImgId">--%>
-        <%--
-
-                    <object id="DWGViewX" codebase="${_ctx}/resource/dwgviewx.cab" height="520"
-                            width="700" classid="clsid:AC53EFE4-94A7-47E6-BBFC-E9B9CF322299">
-                        <param name="_Version" value="65536">
-                        <param name="_ExtentX" value="18521">
-                        <param name="_ExtentY" value="13758">
-                        <param name="_StockProps" value="0">
-                        <param name="DrawingFile" value="${_ctx}/resource/images/009.dwg">
-                        <param name="ShowToobar" value="-1">
-                        <param name="ShowLayoutBar" value="-1">
-
-                    </object>
-        --%>
-                   <%-- <iframe src="${_ctx}/demo.do" style="width: 100%;height: 800px;"> </iframe>--%>
-                <%--</div>--%>
             </div>
 
             <div style="padding-left: 30px;width: 60%;float: left;">
-                <%--
-                <a href="javascript:ZoomIn()">Zoom In</a> | <a href="javascript:ZoomOut()">Zoom Out</a> | <a href="javascript:ZoomAll()">Zoom All</a>
-                | <a href="javascript:ZoomWindow()">Zoom Window</a>| <a href="javascript:Pan()">Pan</a>| <a href="javascript:HideToolbar()">Show/Hide Toolbar</a>
-                | <a href="javascript:HideLayoutBar()">Show/Hide LayoutBar</a>
-                |<a href="javascript:Print()">Print</a>
-                |<a href="javascript:Background()">Background</a>
-            --%>
-                <%--
-                <div style="display: none;">
-                    <p>查看本地CAD文件,仅支持（dwg,dxf,dwf）三种格式:</p>
-                    <input type="file" id="drawing" class="file" accept=".dwg, .dxf, .dwf" onchange="loadDWG()" style="width: 400px;" />
-                    <button type="button" id="btn" data-toggle="modal" data-target="#myModal" style="display: none"></button>
-                </div>
-                --%>
+
                 <div>
                     <object id="DWGViewX" codebase="http://www.autodwg.com/dwgviewx/dwgviewx.cab" height="750"
                     <%--<object id="DWGViewX" codebase="http://${header["Host"]}${_ctx}/resource/dwgviewx.cab" height="520"--%>
-                            width="900" classid="clsid:AC53EFE4-94A7-47E6-BBFC-E9B9CF322299">
+                            width="1000" classid="clsid:AC53EFE4-94A7-47E6-BBFC-E9B9CF322299">
                         <param name="_Version" value="65536">
                         <param name="_ExtentX" value="18521">
                         <param name="_ExtentY" value="13758">
@@ -196,42 +158,22 @@
 
             </div>
 
+            <%--替换图纸--%>
+            <div style="float: left;">
+                <label>请选择新文件地址</label>
+                <input type="button" value="选择文件" id="chooseFileId">
+                <%--
+                <input type="file" name="multipartFile" id="uploadSaveFiles" style="width: 300px !important;"/>
+                <input type="button" name="确认替换" id="confirmUploadFile" value="确认替换">
+                --%>
+            </div>
+
         </div>
     </div>
 
-
-
     <div style="width: 100%;float: left;">
-        <%--
-        <span style="margin-right: 100px;margin-left: 80%;font-weight: bold;">2018 V1版</span>
-        --%>
         <jsp:include page="bottom.jsp"/>
     </div>
-
-    <%--
-    <div>
-
-        JSTL方式<br/>${pageContext.request}                  |取得请求对象<br>
-        ${pageContext.session}                  |取得session对象<br>
-        ${pageContext.request.queryString}      |取得请求的参数字符串<br>
-        ${pageContext.request.requestURL}       |取得请求的URL，但不包括请求之参数字符串<br>
-        ${pageContext.request.contextPath}      |服务的web application的名称<br>
-        ${pageContext.request.method}           |取得HTTP的方法(GET、POST)<br>
-        ${pageContext.request.protocol}         |取得使用的协议(HTTP/1.1、HTTP/1.0)<br>
-        ${pageContext.request.remoteUser}       |取得用户名称<br>
-        ${pageContext.session.id}               |取得session的ID<br>
-        ${header["User-Agent"]}|用户浏览器的版本<br/>
-        ${header["Host"]}|IP<br/>
-        ${pageContext.request.remoteAddr }      |取得用户的IP地址<br>
-        ${pageContext.servletContext.serverInfo}|取得主机端的服务信息<br>
-        ${pageContext.request.serverPort}|端口信息<br>
-        ${pageContext.request.serverName}|服务器名称<br>
-        ${pageContext.request.remoteHost}|客户机名称<br>
-
-
-
-    </div>
---%>
 
 </body>
 </html>
@@ -283,134 +225,7 @@
             }
         });
 
-        //左边双击添加
-        $("#undo_redo_left").off("dblclick").on("dblclick", function(event){
-            $("#addId").click();
-        });
 
-        //添加
-        $("#addId").off("click").on("click", function(event) {
-            var leftObj = $("#undo_redo_left");
-            var leftOptions = leftObj[0].options;
-            var leftLength = leftOptions.length;
-
-            var mapObj = {};
-            var rightObj = $("#undo_redo_right");
-            var rightOptions = rightObj[0].options;
-            var rigthLen = rightOptions.length;
-            for (var j = 0; j < rigthLen; j++) {
-                var rOp = rightOptions[j];
-                mapObj[rOp.value] = rOp.text;
-            }
-
-            if (leftLength < 0) {
-                alert("请先选择要添加的文件！");
-            }
-            var delArr = [];
-
-            for (var i = 0; i < leftLength; i++) {
-                var op = leftOptions[i];
-                var key = op.value;
-                if (mapObj[key] == null && op.selected) {
-                    var path = $(op).attr("path");
-                    rightObj.append("<option value='" + key + "'  path='"+path+"'  >" + op.text + "</option>");//新增
-                    delArr.push(key);
-                }
-            }
-
-            // 删除左列表
-            for (var k = 0; k < delArr.length; k++) {
-                $("#undo_redo_left option[value='"+delArr[k]+"']").remove();
-            }
-
-
-            var leftLen = $("#undo_redo_left")[0].options.length;
-            var rightLen = $("#undo_redo_right")[0].options.length;
-            $("#leftNumId").html(leftLen);
-            $("#rightNumId").html(rightLen);
-
-        });
-
-        //删除
-        $("#delId").off("click").on("click", function(event){
-            var leftObj = $("#undo_redo_left");
-            var leftOptions = leftObj[0].options;
-            var leftLength = leftOptions.length;
-
-            var mapObj = {};
-            var rightObj = $("#undo_redo_right");
-            var rightOptions = rightObj[0].options;
-            var rigthLen = rightOptions.length;
-
-
-            for (var j = 0; j < leftLength; j++) {
-                var rOp = leftOptions[j];
-                mapObj[rOp.value] = rOp.text;
-            }
-
-            if (rightOptions.length < 0) {
-                alert("请先选择要删除的文件！");
-            }
-            var delArr = [];
-
-            for (var i = 0; i < rigthLen; i++) {
-                var op = rightOptions[i];
-                var key = op.value;
-                if (op.selected) {
-                    delArr.push(key);
-                }
-                if (mapObj[key] == null && op.selected) {
-                    var path = $(op).attr("path");
-                    leftObj.append("<option value='" + key + "' path='"+path+"' >" + op.text + "</option>");//新增
-
-                }
-            }
-
-            // 删除左列表
-            for (var k = 0; k < delArr.length; k++) {
-                $("#undo_redo_right option[value='"+delArr[k]+"']").remove();
-            }
-
-            var leftLen = $("#undo_redo_left")[0].options.length;
-            var rightLen = $("#undo_redo_right")[0].options.length;
-            $("#leftNumId").html(leftLen);
-            $("#rightNumId").html(rightLen);
-
-        });
-
-        //打包存档
-        $("#packageId").off("click").on("click", function(event){
-            var mapObj = {};
-            var rightObj = $("#undo_redo_right");
-            var rightOptions = rightObj[0].options;
-            var rigthLen = rightOptions.length;
-            for (var j = 0; j < rigthLen; j++) {
-                var rOp = rightOptions[j];
-                mapObj[rOp.value] = rOp.text;
-            }
-
-            if(isEmptyObject(mapObj)){
-                alert("请先选择图纸！");
-                return;
-            }
-
-            $.ajax({
-                "type" : 'post',
-                "url" : '${_ctx}/doPackage.do',
-                "dataType" : "json",
-                "async" : false,
-                "data" : {
-                    "mapObj":JSON.stringify(mapObj)
-                },
-                success : function(result) {
-                    if(result!=null){
-                        debugger
-                        window.location.href="${_ctx}/download.do?zipFileName="+result;
-                    }
-                }
-            });
-
-        });
 
         // clearId
         $("#clearId").off("click").on("click", function(event){
@@ -422,39 +237,23 @@
                 op.remove();
             }
 
-            var rightObj = $("#undo_redo_right");
-            var rightOp = rightObj[0].options;
-            var len2 = rightOp.length;
-            for(var i=len2-1;i>=0;i--){
-                var op = $(rightOp[i]);
-                op.remove();
-            }
-
             var leftLen = $("#undo_redo_left")[0].options.length;
-            var rightLen = $("#undo_redo_right")[0].options.length;
             $("#leftNumId").html(leftLen);
-            $("#rightNumId").html(rightLen);
 
             $("#searchKeyId").val("");
 
         });
 
-        //右边双击查看
-        $("#undo_redo_right").off("dblclick").on("dblclick", function(event){
-            var rightObj = $("#undo_redo_right");
-            var rightOptions = rightObj[0].options;
-            var rigthLen = rightOptions.length;
-            for (var i = 0; i < rigthLen; i++) {
-                var op = rightOptions[i];
+        //左边双击查看
+        $("#undo_redo_left").off("dblclick").on("dblclick", function(event){
+            var leftObj = $("#undo_redo_left");
+            var leftOptions = leftObj[0].options;
+            var leftLen = leftOptions.length;
+            for (var i = 0; i < leftLen; i++) {
+                var op = leftOptions[i];
                 var key = op.value;
                 var name = op.text;
                 if(op.selected){
-                    //path.replace(file,"file");
-                    //$("#showImgId").attr("src",'${_ctx}/showImg.do?id='+key);
-                    //$("#showImgId").attr("title",name);
-                    //$("#DWGViewX param[name='DrawingFile']").val('${_ctx}/showImg.do?id='+key)
-                    // 通过文件流Base64方式展示
-
                     $.ajax({
                         "type" : 'post',
                         "url" : '${_ctx}/showCad.do',
@@ -471,8 +270,6 @@
                             }
                         }
                     });
-
-
                 }
             }
 
@@ -529,5 +326,144 @@
         return true;//返回true，为空对象
     }
 
+
+    // confirmUploadFile
+    // 点击上传
+    $("#confirmUploadFile").off("click").on("click", function(event){
+        var leftObj = $("#undo_redo_left");
+        var leftOptions = leftObj[0].options;
+        var leftLen = leftOptions.length;
+        var selectedKey = "";
+        for (var i = 0; i < leftLen; i++) {
+            var op = leftOptions[i];
+            var key = op.value;
+            var name = op.text;
+            if (op.selected) {
+                selectedKey = key;
+            }
+        }
+
+        if(selectedKey==""){
+            alert("请选择要替换的文件");
+            return;
+        }
+
+        var f = confirm("确认是否替换？");
+        if(f){
+            ajaxFileUpload(selectedKey);
+
+            /*
+            $('#uploadSaveFiles').fileupload({
+                url : '${_ctx }/uploadSaveFiles.do?id='+selectedKey,
+                dataType : 'json',
+                iframe : true,
+                singleFileUploads : true,
+                error: function(jqXHR, textStatus, errorThrown) {
+                },
+                add: function(e, data) {
+                    var flag = true;
+                    $.each(data.files, function(index, file){
+                        var filename = file.name;
+                        var filesize = file.size;
+                        filename = filename.toUpperCase();
+                        if(filename.indexOf(".")<0||(filename.lastIndexOf("DWG") >= 0)){
+                            openDialog("请选择正确的文件格式！");
+                            flag = false;
+                            return false;
+                        }
+                        //文件大于10M不让上传 需求汪炳良 2017年8月1日
+                        if(filesize > 10 * 1024 * 1024 ){
+                            openDialog("上传的文件不能大于10M!");
+                            flag = false;
+                            return false;
+                        }
+                    });
+                    if (flag) {
+                        data.submit();
+                    }
+                },
+                done: function(e, data) {
+                    var result = eval(data.result);
+                    if(result.success){
+                        var fileNames="";
+                        var list=result.resultList;
+                        for(var i =0;i<list.length;i++){
+                            fileNames+=list[i].id.fileId+",";
+                        }
+                        alert("上传成功！");
+                    }else {
+                        alert("上传失败！");
+                    }
+                }
+            });
+            */
+
+
+
+        }
+    });
+
+
+
+    function ajaxFileUpload(selectedKey) {
+        $.ajaxFileUpload({
+                    url: '${_ctx }/uploadSaveFiles.do?id='+selectedKey, //用于文件上传的服务器端请求地址
+                    secureuri: false, //是否需要安全协议，一般设置为false
+                    fileElementId: 'uploadSaveFiles', //文件上传域的ID
+                    dataType: 'json', //返回值类型 一般设置为json
+                    success: function (data, status)  //服务器成功响应处理函数
+                    {
+                        var result = eval(data.result);
+                        if(result.success){
+                            alert("上传成功！");
+                        }else {
+                            alert("上传失败！");
+                        }
+                    },
+                    error: function (data, status, e)//服务器响应失败处理函数
+                    {
+                        alert(e);
+                    }
+                }
+        )
+        return false;
+    }
+
+
+    $("#chooseFileId").off("click").on("click", function(event) {
+        var leftObj = $("#undo_redo_left");
+        var leftOptions = leftObj[0].options;
+        var leftLen = leftOptions.length;
+        var selectedKey = "";
+        for (var i = 0; i < leftLen; i++) {
+            var op = leftOptions[i];
+            var key = op.value;
+            var name = op.text;
+            if (op.selected) {
+                selectedKey = key;
+            }
+        }
+
+        if (selectedKey == "") {
+            alert("请选择要替换的文件");
+            return;
+        }
+        //openwindow("${_ctx }/openUploadPage.do?id="+selectedKey,"上传图纸",650,220);
+        window.open("${_ctx }/openUploadPage.do?id="+selectedKey);
+
+    });
+
+
+    function openwindow(url,name,iWidth,iHeight)
+    {
+        var url;                            //转向网页的地址;
+        var name;                           //网页名称，可为空;
+        var iWidth;                         //弹出窗口的宽度;
+        var iHeight;                        //弹出窗口的高度;
+        //window.screen.height获得屏幕的高，window.screen.width获得屏幕的宽
+        var iTop = (window.screen.height-30-iHeight)/2;       //获得窗口的垂直位置;
+        var iLeft = (window.screen.width-10-iWidth)/2;        //获得窗口的水平位置;
+        window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no');
+    }
 
 </script>

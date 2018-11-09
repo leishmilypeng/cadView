@@ -2,29 +2,34 @@ package com.lp.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.lp.entity.CadInfo;
-import com.lp.utils.Config;
 import com.lp.utils.Constants;
 import com.lp.utils.FileUtility;
 import com.lp.utils.MD5;
 import com.lp.utils.ZipUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by CPR161 on 2018-09-19.
@@ -34,7 +39,7 @@ public class IndexController {
 
     @RequestMapping("/index")
     public String index(HttpServletRequest request, HttpServletResponse response) {
-        String rootPath = Config.getString("default.path");
+        String rootPath = Constants.DEFAULT_PATH;
 
 
         File file = new File(rootPath);
@@ -49,7 +54,7 @@ public class IndexController {
 
     @RequestMapping("/toSearchPage")
     public String toSearchPage(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("file",Config.getString("default.path"));
+        request.setAttribute("file",Constants.DEFAULT_PATH);
 
 
         return "searchPage";
@@ -96,7 +101,7 @@ public class IndexController {
         String dir = realPath +File.separator+"resource"+File.separator+"cad"+File.separator;
         String suffix = cadInfo.getName().substring(cadInfo.getName().lastIndexOf("."));
         fileName = cadInfo.getId()+suffix;
-        FileUtility.moveFile(cadInfo.getPath(),dir,fileName,false);
+        FileUtility.moveFile(cadInfo.getPath(),dir,fileName,true);
         return fileName;
     }
 
@@ -145,7 +150,7 @@ public class IndexController {
 
         String parentPath = "";
         if(StringUtils.isEmpty(id)){
-            String rootPath = Config.getString("default.path");
+            String rootPath = Constants.DEFAULT_PATH;
             id = MD5.stringMD5(rootPath);
             CadInfo cInfo = new CadInfo();
             cInfo.setId(id);
@@ -182,10 +187,6 @@ public class IndexController {
     @RequestMapping("/doPackage")
     @ResponseBody
     public String doPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        File test = new File("E:/deploy/cad/resource/zip/a797687c596169adb569e6700c42f560");
-        String [] strs = test.list();
-
 
         String mapObjStr = request.getParameter("mapObj");
         JSONObject jsonObj =  JSONObject.parseObject(mapObjStr);
@@ -286,7 +287,152 @@ public class IndexController {
     }
 
 
+    /**
+     * 进入管理员界面
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/admin")
+    public String admin(HttpServletRequest request, HttpServletResponse response) {
 
 
+        return "admin";
+    }
+
+
+    @RequestMapping("/login")
+    @ResponseBody
+    public Map login(HttpServletRequest request, HttpServletResponse response) {
+        Map<String,Object> result = new HashMap<>();
+        result.put("success",false);
+        result.put("msg","密码不正确！");
+
+        String password = request.getParameter("password");
+        String key = FileUtility.getClassPathResource("key");
+        if(password.equals(key)){
+            result.put("success",true);
+            request.getSession().setAttribute("isAdmin",true);
+        }
+
+        return result;
+    }
+
+
+    /**
+     * 进入管理员界面
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/cadReplace")
+    public String cadReplace(HttpServletRequest request, HttpServletResponse response) {
+        // 判断是经过校验
+        Boolean isAdmin = Boolean.valueOf(String.valueOf( request.getSession().getAttribute(Constants.IS_ADMIN))) ;
+        if(!isAdmin){
+            return "redirect:/admin.do";
+        }
+
+        return "cadReplace";
+    }
+
+    @RequestMapping("/leave")
+    public String leave(HttpServletRequest request, HttpServletResponse response) {
+        // 判断是经过校验
+        Boolean isAdmin = Boolean.valueOf((String) request.getSession().getAttribute(Constants.IS_ADMIN)) ;
+        if(isAdmin){
+            request.getSession().setAttribute("isAdmin",null);
+        }
+
+        return "redirect:/toSearchPage.do";
+    }
+
+
+    /**
+     * 进入密码设置界面
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/setPassPage")
+    public String setPassPage(HttpServletRequest request, HttpServletResponse response) {
+
+
+        return "setPassPage";
+    }
+
+
+    @RequestMapping("/modifyPass")
+    @ResponseBody
+    public Map modifyPass(HttpServletRequest request, HttpServletResponse response) {
+        Map<String,Object> result = new HashMap<>();
+        result.put("success",false);
+        result.put("msg","修改失败！");
+
+        String passwordOld = request.getParameter("passwordOld");
+        String passwordNew = request.getParameter("passwordNew");
+        String passwordCheck = request.getParameter("passwordCheck");
+
+        if(StringUtils.isEmpty(passwordOld)||StringUtils.isEmpty(passwordNew)||StringUtils.isEmpty(passwordCheck)){
+            result.put("msg","修改信息不能为空！");
+            return  result;
+        }
+        if(!passwordNew.equals(passwordCheck)){
+            result.put("msg","确认密码和新密码不一致，请检查！");
+            return  result;
+        }
+
+        String key = FileUtility.getClassPathResource("key");
+        if(passwordOld.equals(key)){
+            result.put("success",true);
+            File file= null;
+            try {
+                file = ResourceUtils.getFile("classpath:key");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            FileUtility.writeFileText(file.getAbsolutePath(),passwordNew,false);
+            // 修改密码后把session清空
+            request.getSession().setAttribute(Constants.IS_ADMIN,null);
+        }else{
+            result.put("msg","原密码不输入不正确！");
+        }
+
+        return result;
+    }
+
+    // openUploadPage
+    @RequestMapping("/openUploadPage")
+    public String openUploadPage(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("id",request.getParameter("id"));
+        return "upload";
+    }
+
+
+    @RequestMapping("/uploadSaveFiles")
+    @ResponseBody
+    public void uploadSaveFiles(HttpServletRequest request, @RequestParam MultipartFile[] multipartFile){
+
+        String selectedKey = request.getParameter("id");
+        CadInfo cadInfo = Constants.fileListMap.get(selectedKey);
+
+        Map<String, Object> returnMap = new HashMap<>();
+        boolean success = false;
+        if(multipartFile != null && multipartFile.length > 0){
+            for(MultipartFile multiFile : multipartFile){
+                String originalFileName = multiFile.getOriginalFilename();
+                try {
+                    String dstFilePath = cadInfo.getPath();
+                    File dstFile = new File(dstFilePath);
+                    multiFile.transferTo(dstFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            success = true;
+        }
+        returnMap.put("success", success);
+       // return returnMap;
+    }
 
 }

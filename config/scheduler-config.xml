@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd" default-lazy-init="false">
+
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="scanCadFileTriger"/>
+            </list>
+        </property>
+    </bean>
+	
+    <bean id="scanCadFileTriger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="sendInsPacketJob" />
+        <!-- 每天凌晨2点执行 -->
+        <property name="cronExpression" value="0 29 17 * * ?" />
+    </bean>
+    <bean id="sendInsPacketJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="scanCadFileService" />
+        <property name="targetMethod" value="init"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+</beans>

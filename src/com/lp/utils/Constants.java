@@ -10,4 +10,7 @@ public class Constants {
 
     public static Map<String,CadInfo> fileListMap = new ConcurrentHashMap<>();
 
+    public static final String IS_ADMIN = "isAdmin";
+
+    public  static String DEFAULT_PATH =null;
 }
