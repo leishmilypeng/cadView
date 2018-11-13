@@ -14,7 +14,7 @@
     <bean id="scanCadFileTriger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="sendInsPacketJob" />
         <!-- 每天凌晨2点执行 -->
-        <property name="cronExpression" value="0 29 17 * * ?" />
+        <property name="cronExpression" value="0 0 2 * * ?" />
     </bean>
     <bean id="sendInsPacketJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="scanCadFileService" />

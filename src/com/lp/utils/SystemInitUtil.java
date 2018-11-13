@@ -3,8 +3,15 @@ package com.lp.utils;
 import com.lp.entity.CadInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.ResourceUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 
 public class SystemInitUtil {
@@ -21,9 +28,40 @@ public class SystemInitUtil {
 		LOG.info("====开始检索文件===");
 		Timestamp begin = DateUtil.getCurrentTimestamp();
 		//String rootPath = Config.getString("default.path");
-		Constants.DEFAULT_PATH = FileUtility.getClassPathResource("default.path");
-		String rootPath = Constants.DEFAULT_PATH;
+
+
+		//Constants.DEFAULT_PATH = FileUtility.getClassPathResource("default.path.txt");
+		File defaultPathFile = null;
+		try {
+			defaultPathFile = ResourceUtils.getFile("classpath:default.path.txt");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		BufferedReader buff = null;
+		try {
+			buff = new BufferedReader(new InputStreamReader(new FileInputStream(defaultPathFile),"UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		String line=null;
+		StringBuilder infoMsg=new StringBuilder();
+		try {
+			while((line=buff.readLine())!=null) {
+                // 重复读取
+                infoMsg.append(line).append("");
+            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String rootPath = infoMsg.toString();
+		if(rootPath.indexOf("=")>=0){
+			int charIdx = rootPath.indexOf("=");
+			rootPath = rootPath.substring(charIdx+1);
+		}
 		this.addFile(rootPath);
+		Constants.DEFAULT_PATH = rootPath;
 		Timestamp end = DateUtil.getCurrentTimestamp();
 		long last = (end.getTime()-begin.getTime())/1000;
 		LOG.info("====结束检索文件===,耗时："+last+"s,文件个数:"+Constants.fileListMap.size());
