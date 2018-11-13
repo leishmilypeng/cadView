@@ -16,7 +16,6 @@
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title id ="loginTitle">图纸管理</title>
-    <link rel="icon"  href="${_ctx}/resource/images/public/favicon_02.gif" type="image/x-icon">
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/v.js"></script>

@@ -76,7 +76,7 @@ jQuery.extend({
     ajaxFileUpload: function(s) {
         // TODO introduce global settings, allowing the client to modify them for all requests, not only timeout
         s = jQuery.extend({}, jQuery.ajaxSettings, s);
-        var id = new Date().getTime()
+        var id = new Date().getTime();
         var form = jQuery.createUploadForm(id, s.fileElementId);
         if ( s.data ) form = jQuery.addOtherRequestsToForm(form,s.data);
         var io = jQuery.createUploadIframe(id, s.secureuri);
@@ -89,7 +89,7 @@ jQuery.extend({
         }
         var requestDone = false;
         // Create the request object
-        var xml = {}
+        var xml = {};
         if ( s.global )
             jQuery.event.trigger("ajaxSend", [xml, s]);
         // Wait for a response to come back
@@ -150,7 +150,7 @@ jQuery.extend({
                 if ( s.complete )
                     s.complete(xml, status);
 
-                jQuery(io).unbind()
+                jQuery(io).unbind();
 
                 setTimeout(function()
                 {	try
@@ -163,12 +163,12 @@ jQuery.extend({
                         jQuery.handleError(s, xml, null, e);
                     }
 
-                }, 100)
+                }, 100);
 
                 xml = null
 
             }
-        }
+        };
         // Timeout checker
         if ( s.timeout > 0 )
         {
@@ -215,17 +215,19 @@ jQuery.extend({
         if ( type == "script" )
             jQuery.globalEval( data );
         // Get the JavaScript object, if JSON is used.
-        if ( type == "json" )
-        {
+        if ( type == "json" ) {
             // If you add mimetype in your response,
             // you have to delete the '<pre></pre>' tag.
             // The pre tag in Chrome has attribute, so have to use regex to remove
             var data = r.responseText;
-            var rx = new RegExp("<pre.*?>(.*?)</pre>","i");
+            var rx = new RegExp("<pre.*?>(.*?)</pre>", "i");
             var am = rx.exec(data);
             //this is the desired data extracted
             var data = (am) ? am[1] : "";    //the only submatch or empty
-            eval( "data = " + data );
+            if (data != "") {
+                eval("data = " + data);
+            }
+
         }
         // evaluate scripts within html
         if ( type == "html" )
@@ -233,5 +235,5 @@ jQuery.extend({
         //alert($('param', data).each(function(){alert($(this).attr('value'));}));
         return data;
     }
-})
+});
 

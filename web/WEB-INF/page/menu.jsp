@@ -16,7 +16,6 @@
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title id ="loginTitle">菜单</title>
-    <link rel="icon"  href="${_ctx}/resource/images/public/favicon_02.gif" type="image/x-icon"></link>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/v.js"></script>
@@ -26,9 +25,28 @@
 
 
     <style>
-        .menuClass{
+      /*  .menuClass{
             margin-top: 40px;
             margin-left: 10px;
+        }*/
+        .menuTextClass{
+            background-color:#428bca;
+            font-size: 25px;
+        }
+        .buttonClass{
+            margin: auto;
+            border: none;
+            background-color: #3667d3;
+            width: 125px;
+            position: relative;
+            top: 45px;
+            border-radius: 10px;
+            padding: 10px 0;
+            color: #fff;
+            font-size: 20px;
+            font-family: 微软雅黑;
+            outline: none;
+            margin: 15px 10px 15px 10px  ;
         }
     </style>
 
@@ -39,13 +57,27 @@
 <body>
 
     <div >
-        <div class="menuClass" do_url="${_ctx}/toSearchPage.do">图纸检索</div>
-        <div class="menuClass" do_url="${_ctx}/cadReplace.do">图纸替换</div>
-        <div class="menuClass" do_url="">重名识别</div>
-        <div class="menuClass" do_url="${_ctx}/showLog.do">操作日志</div>
-        <div class="menuClass" do_url="${_ctx}/setPassPage.do">权限管理</div>
-        <div class="menuClass" do_url="">图纸借用</div>
-        <div class="menuClass" do_url="">图纸管理</div>
+        <div>
+            <input type="button" class="buttonClass menuClass" do_url="${_ctx}/toSearchPage.do"  value="图纸检索">
+        </div>
+        <div>
+            <input type="button" class="buttonClass menuClass" do_url="${_ctx}/cadReplace.do"  value="图纸替换">
+        </div>
+        <div>
+            <input type="button" class="buttonClass menuClass" do_url=""  value="重名识别">
+        </div>
+        <div>
+            <input type="button" class="buttonClass menuClass" do_url=""  value="操作日志">
+        </div>
+        <div>
+            <input type="button" class="buttonClass menuClass" do_url="${_ctx}/setPassPage.do"  value="权限管理">
+        </div>
+        <div>
+            <input type="button" class="buttonClass menuClass" do_url=""  value="图纸借用">
+        </div>
+        <div>
+            <input type="button" class="buttonClass menuClass" do_url=""  value="图纸管理">
+        </div>
     </div>
 </body>
 </html>
@@ -55,7 +87,7 @@
         var $this = $(this);
         var doUrl = $this.attr("do_url");
         if(doUrl==""){
-            alert("功能正在加紧开发中...");
+            alert("正在加紧开发中...");
             return;
         }else{
             window.location.href=doUrl;

@@ -17,11 +17,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title id ="loginTitle">图纸管理</title>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery.js"></script>
-    <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/v.js"></script>
-    <link href="${_ctx}/resource/css/jquery/jquery-ui.css" rel="stylesheet">
-    <link href="${_ctx}/resource/css/jquery/verify.css" rel="stylesheet">
-
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/ajaxfileupload.js"></script>
 </head>
 <body>
@@ -29,9 +24,12 @@
         <jsp:include page="header.jsp"/>
     </div>
 
+    <div>
+       <span style="color: red;">注意：上传时请选择正确的CAD图纸文件！！！</span>
+    </div>
     <%--替换图纸--%>
     <div style="float: left;">
-        <label>请选择新文件地址</label>
+        <label>选择新图纸</label>
         <input type="file" name="multipartFile" id="uploadSaveFiles" style="width: 300px !important;">
         <input type="button" name="确认替换" id="confirmUploadFile" value="确认替换">
     </div>
@@ -54,12 +52,18 @@
                         secureuri: false, //是否需要安全协议，一般设置为false
                         fileElementId: 'uploadSaveFiles', //文件上传域的ID
                         dataType: 'json', //返回值类型 一般设置为json
-                        success: function ()  //服务器成功响应处理函数
+                        success: function (data, status)  //服务器成功响应处理函数
                         {
-
-                            alert("替换成功，请重新查看图纸！");
+                            alert("替换成功，请重新双击查看图纸！");
                             window.close();
-
+                            /*
+                            if(data.success) {
+                                alert("替换成功，请重新查看图纸！");
+                                window.close();
+                            }else{
+                                alert("替换失败！");
+                            }
+*/
                         },
                         error: function (data, status, e)//服务器响应失败处理函数
                         {

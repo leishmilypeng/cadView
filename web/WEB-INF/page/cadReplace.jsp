@@ -46,7 +46,6 @@
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title id ="loginTitle">CAD图纸替换和删除</title>
-    <link rel="icon"  href="${_ctx}/resource/images/public/favicon_02.gif" type="image/x-icon">
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/v.js"></script>
@@ -132,6 +131,8 @@
                 <div style="width: 50px;float: left;">
                     <div style="margin-top: 450px;">
                         <input type="button" value="清除" id="clearId" onclick="" style="margin-top: 10px;">
+                        <%--替换图纸--%><br><br><br>
+                        <input type="button" value="选择文件" id="chooseFileId">
                     </div>
                 </div>
 
@@ -159,15 +160,6 @@
             </div>
 
             <%--替换图纸--%>
-            <div style="float: left;">
-                <label>请选择新文件地址</label>
-                <input type="button" value="选择文件" id="chooseFileId">
-                <%--
-                <input type="file" name="multipartFile" id="uploadSaveFiles" style="width: 300px !important;"/>
-                <input type="button" name="确认替换" id="confirmUploadFile" value="确认替换">
-                --%>
-            </div>
-
         </div>
     </div>
 
@@ -448,8 +440,8 @@
             alert("请选择要替换的文件");
             return;
         }
-        //openwindow("${_ctx }/openUploadPage.do?id="+selectedKey,"上传图纸",650,220);
-        window.open("${_ctx }/openUploadPage.do?id="+selectedKey);
+        openwindow("${_ctx }/openUploadPage.do?id="+selectedKey,"上传图纸",650,220);
+        //window.open("${_ctx }/openUploadPage.do?id="+selectedKey);
 
     });
 

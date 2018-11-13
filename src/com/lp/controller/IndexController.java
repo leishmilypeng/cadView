@@ -418,6 +418,7 @@ public class IndexController {
 
         Map<String, Object> returnMap = new HashMap<>();
         boolean success = false;
+        returnMap.put("success", success);
         if(multipartFile != null && multipartFile.length > 0){
             for(MultipartFile multiFile : multipartFile){
                 String originalFileName = multiFile.getOriginalFilename();
@@ -432,7 +433,7 @@ public class IndexController {
             success = true;
         }
         returnMap.put("success", success);
-       // return returnMap;
+       //return returnMap;
     }
 
 }
