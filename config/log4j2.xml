@@ -9,8 +9,8 @@
 			<PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss} %m%n" />
 		</Console>
 		
-		<RollingFile name="ROLLING" fileName="/opt/logs/cad.log"
-             filePattern="/opt/logs/cad.%d{yyyy-MM-dd}_%i.log">
+		<RollingFile name="ROLLING" fileName="/cadlog/logs/cad.log"
+             filePattern="/cadlog/logs/cad.%d{yyyy-MM-dd}_%i.log">
             <PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss} %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>

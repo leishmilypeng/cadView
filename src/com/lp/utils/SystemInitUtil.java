@@ -1,6 +1,8 @@
 package com.lp.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lp.entity.CadInfo;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.ResourceUtils;
@@ -13,6 +15,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class SystemInitUtil {
 
@@ -20,10 +25,10 @@ public class SystemInitUtil {
 	
 	public void init(){
 
-		if(!Constants.fileListMap.isEmpty()){
-			LOG.info("====定时任务启动清空map===");
-			Constants.fileListMap.clear();
-		}
+		// 写入缓存文件
+		String cacheDir = Config.getString("cache.data");
+		String cacheFilePath = cacheDir+"cad.cache.data";
+		File cacheFile = new File(cacheFilePath);
 
 		LOG.info("====开始检索文件===");
 		Timestamp begin = DateUtil.getCurrentTimestamp();
@@ -60,11 +65,54 @@ public class SystemInitUtil {
 			int charIdx = rootPath.indexOf("=");
 			rootPath = rootPath.substring(charIdx+1);
 		}
-		this.addFile(rootPath);
+
 		Constants.DEFAULT_PATH = rootPath;
+
+		boolean  isNeed = true;
+
+		if(!Constants.fileListMap.isEmpty()){
+			LOG.info("====定时任务启动清空map===");
+			Constants.fileListMap.clear();
+		}else{
+			File dirFile = new File(cacheDir);
+			if(!dirFile.exists()){
+				dirFile.mkdirs();
+			}
+			// 文件中读取
+			if(cacheFile.exists()){
+				String cacheDataStr = FileUtility.getFileText(cacheFilePath);
+				if(StringUtils.isNotEmpty(cacheDataStr)) {
+					Map<String,CadInfo> tmpCadMap = new HashMap<>();
+					JSONObject cacheMap  = JSONObject.parseObject(cacheDataStr);
+					Set<String> cacheKeys = cacheMap.keySet();
+					for(String ck:cacheKeys){
+						String cadInfoStr = cacheMap.getString(ck);
+						CadInfo tmpCi = JSONObject.parseObject(cadInfoStr,CadInfo.class);
+						tmpCadMap.put(ck,tmpCi);
+					}
+					if(!tmpCadMap.isEmpty()){
+						Constants.fileListMap.putAll(tmpCadMap);
+						isNeed = false ;
+					}
+				}
+			}
+		}
+
+		if(isNeed) {
+			this.addFile(rootPath);
+
+			// 写入缓存文件
+			if(cacheFile.exists()){
+				cacheFile.delete();
+			}
+			FileUtility.writeFileText(cacheFilePath, JSONObject.toJSONString(Constants.fileListMap));
+		}
+
 		Timestamp end = DateUtil.getCurrentTimestamp();
 		long last = (end.getTime()-begin.getTime())/1000;
 		LOG.info("====结束检索文件===,耗时："+last+"s,文件个数:"+Constants.fileListMap.size());
+
+
 	}
 
 	public void addFile(String parentFilePath) {

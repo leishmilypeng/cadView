@@ -58,30 +58,40 @@
 
     <div >
         <div>
-            <input type="button" class="buttonClass menuClass" do_url="${_ctx}/toSearchPage.do"  value="图纸检索">
+            <input type="button" class="buttonClass menuClass c_a" do_url="${_ctx}/toSearchPage.do?_t=a"  value="图纸检索">
         </div>
         <div>
-            <input type="button" class="buttonClass menuClass" do_url="${_ctx}/cadReplace.do"  value="图纸替换">
+            <input type="button" class="buttonClass menuClass c_b"  do_url="${_ctx}/cadReplace.do?_t=b"  value="图纸替换">
         </div>
         <div>
-            <input type="button" class="buttonClass menuClass" do_url=""  value="重名识别">
+            <input type="button" class="buttonClass menuClass c_c" do_url=""  value="重名识别">
         </div>
         <div>
-            <input type="button" class="buttonClass menuClass" do_url=""  value="操作日志">
+            <input type="button" class="buttonClass menuClass c_d" do_url=""  value="操作日志">
         </div>
         <div>
-            <input type="button" class="buttonClass menuClass" do_url="${_ctx}/setPassPage.do"  value="权限管理">
+            <input type="button" class="buttonClass menuClass c_e" do_url="${_ctx}/setPassPage.do?_t=e"  value="权限管理">
         </div>
         <div>
-            <input type="button" class="buttonClass menuClass" do_url=""  value="图纸借用">
+            <input type="button" class="buttonClass menuClass c_f" do_url=""  value="图纸借用">
         </div>
         <div>
-            <input type="button" class="buttonClass menuClass" do_url=""  value="图纸管理">
+            <input type="button" class="buttonClass menuClass c_g" do_url=""  value="图纸管理">
         </div>
     </div>
 </body>
 </html>
 <script  type="text/javascript">
+
+
+    $(function(){
+        var _t = '${_t}';
+        if(_t==""||_t==null){
+            _t="a";
+        }
+        $(".c_"+_t).css("color","red");
+
+    });
 
     $(".menuClass").off("click").on("click", function(event){
         var $this = $(this);

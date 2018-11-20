@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by CPR161 on 2018-09-19.
@@ -55,7 +56,7 @@ public class IndexController {
     @RequestMapping("/toSearchPage")
     public String toSearchPage(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("file",Constants.DEFAULT_PATH);
-
+        request.setAttribute("_t","a");
 
         return "searchPage";
     }
@@ -333,6 +334,7 @@ public class IndexController {
             return "redirect:/admin.do";
         }
 
+        request.setAttribute("_t","b");
         return "cadReplace";
     }
 
@@ -414,6 +416,7 @@ public class IndexController {
     public void uploadSaveFiles(HttpServletRequest request, @RequestParam MultipartFile[] multipartFile){
 
         String selectedKey = request.getParameter("id");
+        String isReplaceAll = request.getParameter("isReplaceAll");
         CadInfo cadInfo = Constants.fileListMap.get(selectedKey);
 
         Map<String, Object> returnMap = new HashMap<>();
@@ -424,8 +427,28 @@ public class IndexController {
                 String originalFileName = multiFile.getOriginalFilename();
                 try {
                     String dstFilePath = cadInfo.getPath();
+                    String fileName = cadInfo.getName();
                     File dstFile = new File(dstFilePath);
                     multiFile.transferTo(dstFile);
+                    // 全局替换
+                    if("1".equals(isReplaceAll)){
+                       Set<String> keys = Constants.fileListMap.keySet();
+                        int idx =0;
+                       for(String key:keys){
+                           idx++;
+                           if(!key.equals(selectedKey)){
+                               CadInfo tmpCi = Constants.fileListMap.get(key);
+                               if(tmpCi.getName().equals(fileName)){
+                                   //File dstFile2 = new File(tmpCi.getPath());
+                                   //multiFile.transferTo(dstFile2);
+                                   String destDir = Constants.fileListMap.get(tmpCi.getpId()).getPath()+File.separator;
+                                   boolean replaceFlag = FileUtility.moveFile(dstFilePath,destDir,tmpCi.getName(),true);
+                                   System.out.println("匹配文件【"+fileName+"】索引项：【"+idx+"】，源文件：【"+dstFilePath+"】目标文件【"+tmpCi.getPath()+"】，替换状态【"+replaceFlag+"】");
+                               }
+                           }
+                       }
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

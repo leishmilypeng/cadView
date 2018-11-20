@@ -19,13 +19,17 @@
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="${_ctx}/resource/js/lib/jquery/ajaxfileupload.js"></script>
 </head>
-<body>
+<body onblur="self.focus()">
     <div style="margin-bottom: 10px;margin-top: 10px;">
         <jsp:include page="header.jsp"/>
     </div>
 
     <div>
        <span style="color: red;">注意：上传时请选择正确的CAD图纸文件！！！</span>
+    </div>
+    <div>
+        <label>是否全局替换:</label>
+        <input type="checkbox"  id="replaceAllId">
     </div>
     <%--替换图纸--%>
     <div style="float: left;">
@@ -45,10 +49,17 @@
         });
 
         function ajaxFileUpload(selectedKey) {
-            var f = confirm("确认是否替换？");
+            var checked = $("#replaceAllId").prop("checked");
+            var msg = "确认替换？";
+            var isReplaceAll=0;
+            if(checked){
+                isReplaceAll =1;
+                msg = "确认替换全局图纸？";
+            }
+            var f = confirm(msg);
             if(f){
                 $.ajaxFileUpload({
-                        url:'${_ctx}/uploadSaveFiles.do?id='+selectedKey, //用于文件上传的服务器端请求地址
+                        url:'${_ctx}/uploadSaveFiles.do?id='+selectedKey+"&isReplaceAll="+isReplaceAll, //用于文件上传的服务器端请求地址
                         secureuri: false, //是否需要安全协议，一般设置为false
                         fileElementId: 'uploadSaveFiles', //文件上传域的ID
                         dataType: 'json', //返回值类型 一般设置为json

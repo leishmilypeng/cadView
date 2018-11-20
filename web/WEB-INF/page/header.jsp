@@ -21,7 +21,7 @@
 <body>
     <div >
         <img src="${_ctx}/resource/images/logo.png">
-        <span style="font-style:normal;font-weight:900;font-size: x-large;">武汉三工光电图纸检索系统</span>
+        <span style="font-style:normal;font-weight:900;font-size: x-large;">武汉三工光电图纸管理系统</span>
     </div>
 </body>
 </html>

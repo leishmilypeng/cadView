@@ -101,7 +101,7 @@
         <jsp:include page="header.jsp"/>
     </div>
 
-    <div>
+    <div style="width: 2000px;">
         <%--左侧区域-菜单--%>
         <div style="width:150px;float: left; ">
             <jsp:include page="menu.jsp"/>
